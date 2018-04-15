@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
 const scheduleURL = 'https://appsrv.pace.edu/ScheduleExplorerLive/index.cfm';
-const submitSelector = '#submitbutton';
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -28,8 +27,10 @@ const submitSelector = '#submitbutton';
     return true;
   });
 
-  // const submitHandle = await page.$(submitSelector);
-  // await submitHandle.click();
+  const submitBtn = await page.$('#submitbutton');
+  await submitBtn.click();
+
+  await page.waitFor('#yuidatatable1');
 
   await page.screenshot({
     path: 'example.png'
