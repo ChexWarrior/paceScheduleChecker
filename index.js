@@ -1,5 +1,20 @@
 const puppeteer = require('puppeteer');
 const scheduleURL = 'https://appsrv.pace.edu/ScheduleExplorerLive/index.cfm';
+const mailgun = require('mailgun-js')({
+  apiKey: 'KEY',
+  domain: 'DOMAIN'
+});
+
+// let data = {
+//   from: 'Schedule Checker <schedCheck@highHolyZeum>',
+//   to: 'aplehm@gmail.com',
+//   subject: 'Schedule Checker Results',
+//   text: 'Hello!!'
+// };
+
+// mailgun.messages().send(data, (error, body) => {
+//   console.log(body);
+// });
 
 (async () => {
   const browser = await puppeteer.launch({
