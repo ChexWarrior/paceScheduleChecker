@@ -9,20 +9,23 @@ if(args.length < 4) {
 }
 
 const mailgun = require('mailgun-js')({
-  apiKey: args[3],
-  domain: args[4]
+  apiKey: args[2],
+  domain: args[3]
 });
 
-// let data = {
-//   from: 'Schedule Checker <schedCheck@highHolyZeum>',
-//   to: 'aplehm@gmail.com',
-//   subject: 'Schedule Checker Results',
-//   text: 'Hello!!'
-// };
+const sendMessage = function(content) {
+  // console.log(content);
+  let data = {
+    from: 'Schedule Checker <schedCheck@scheduleChecker.biz>',
+    to: 'aplehm@gmail.com',
+    subject: 'Schedule Checker Results',
+    text: content
+  };
 
-// mailgun.messages().send(data, (error, body) => {
-//   console.log(body);
-// });
+  mailgun.messages().send(data, (error, body) => {
+    console.log(body);
+  });
+};
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -79,7 +82,12 @@ const mailgun = require('mailgun-js')({
       return seatsColumn.innerHTML.trim();
     });
 
-    console.log(status);
+    if(status != 'CLOSED') {
+      sendMessage(`
+      <p>An AI class seems to have opened up!</p>
+      <a href="${scheduleURL}">Click here!</a>
+      `);
+    }
   }
 
   await browser.close();
