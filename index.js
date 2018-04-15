@@ -60,7 +60,27 @@ const mailgun = require('mailgun-js')({
     path: 'allCSClasses.png'
   });
 
-  // check how many rows there are for AI
+  /** 
+   find all rows with Artifical Intelligence as title column value...
+   xpath that finds row which contains a td which contains a div that has the text Artificial intelligence
+   '//td/div[text() = "Artificial Intelligence"]/../..'
+    */
+  console.log('Grab all Artificial Intelligence class rows!');
+  const rows = await page.$x('//td/div[text() = "Artificial Intelligence"]/../..');
+  for(let row of rows) {
+    // TODO: How is this working exactly?
+    const id = await page.evaluate(row => {
+      return row.getAttribute('id')
+    }, row);
+
+    console.log(id);
+    const status = await page.$eval(`#${id}`, (row) => {
+      let seatsColumn = row.querySelector('td[class*="Seats"] div');
+      return seatsColumn.innerHTML.trim();
+    });
+
+    console.log(status);
+  }
 
   await browser.close();
 })();
