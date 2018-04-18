@@ -99,7 +99,7 @@ const sendMessage = function(content) {
       return crnColumn.innerHTML.trim();
     });
 
-    writeToLog(`Found matching row with ID: ${id} and CRN: ${crn}`);
+    writeToLog(`Found matching row with ID: ${id} and CRN: ${crn}`, logPath);
 
     if(status != 'CLOSED') {
       sendMessage(`An AI class seems to have opened up!
