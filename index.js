@@ -75,9 +75,9 @@ const sendMessage = function(content) {
   const submitBtn = await page.$('#submitbutton');
   await submitBtn.click();
   await page.waitFor('#yuidatatable1');
-  await page.screenshot({
-    path: 'allCSClasses.png'
-  });
+  // await page.screenshot({
+  //   path: 'allCSClasses.png'
+  // });
 
   writeToLog('Grab all Artificial Intelligence class rows!', logPath);
   const rows = await page.$x('//td/div[text() = "Artificial Intelligence"]/../..');
