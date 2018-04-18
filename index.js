@@ -21,6 +21,12 @@ const getTimeStamp = function() {
   return `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
 };
 
+const writeToLog = function (message, logPath, type = 'INFO') {
+  let timestamp = getTimeStamp();
+  console.log(`${timestamp} - ${type}: ${message}`);
+  fs.appendFileSync(logPath, `\n${timestamp} - ${type}: ${message}`);
+}
+
 const sendMessage = function(content) {
   // console.log(content);
   let data = {
@@ -34,12 +40,6 @@ const sendMessage = function(content) {
     writeToLog(body, logPath, 'ERROR');
   });
 };
-
-const writeToLog = function(message, logPath, type = 'INFO') {
-  let timestamp = getTimeStamp();
-  console.log(`${timestamp} - ${type}: ${message}`);
-  fs.appendFileSync(logPath, `${timestamp} - ${type}: ${message}`);
-}
 
 (async () => {
   const browser = await puppeteer.launch({
