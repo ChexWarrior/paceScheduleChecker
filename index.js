@@ -52,8 +52,10 @@ const writeToLog = function(message, logPath, type = 'INFO') {
     height: 800
   });
 
-  console.log('Go to schedule page...');
+  
+  writeToLog('Go to schedule page...', logPath);
   await page.goto(scheduleURL);
+
   await page.$eval('#checkterm', (el) => {
     el.value = '201870';
     return el.value;
@@ -69,7 +71,7 @@ const writeToLog = function(message, logPath, type = 'INFO') {
     return el.value;
   });
 
-  console.log('Display all graduate CS classes for Fall 2018...');
+  writeToLog('Display all graduate CS classes for Fall 2018...', logPath);
   const submitBtn = await page.$('#submitbutton');
   await submitBtn.click();
   await page.waitFor('#yuidatatable1');
@@ -77,12 +79,7 @@ const writeToLog = function(message, logPath, type = 'INFO') {
     path: 'allCSClasses.png'
   });
 
-  /** 
-   find all rows with Artifical Intelligence as title column value...
-   xpath that finds row which contains a td which contains a div that has the text Artificial intelligence
-   '//td/div[text() = "Artificial Intelligence"]/../..'
-    */
-  console.log('Grab all Artificial Intelligence class rows!');
+  writeToLog('Grab all Artificial Intelligence class rows!', logPath);
   const rows = await page.$x('//td/div[text() = "Artificial Intelligence"]/../..');
   for(let row of rows) {
     // TODO: How is this working exactly?
@@ -101,6 +98,8 @@ const writeToLog = function(message, logPath, type = 'INFO') {
       <p>An AI class seems to have opened up!</p>
       <a href="${scheduleURL}">Click here!</a>
       `);
+    } else {
+      writeToLog(`Class is closed...`, logPath);
     }
   }
 
