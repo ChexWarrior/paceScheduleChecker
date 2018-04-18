@@ -80,23 +80,31 @@ const sendMessage = function(content) {
   // });
 
   writeToLog('Grab all Artificial Intelligence class rows!', logPath);
-  const rows = await page.$x('//td/div[text() = "Artificial Intelligence"]/../..');
+  const rows = 
+    await page.$x('//td/div[text() = "Artificial Intelligence"]/../..');
+
   for(let row of rows) {
     // TODO: How is this working exactly?
-    const id = await page.evaluate(row => {
-      return row.getAttribute('id')
+    let id = await page.evaluate(row => {
+      return row.getAttribute('id');
     }, row);
 
-    console.log(id);
-    const status = await page.$eval(`#${id}`, (row) => {
+    let status = await page.$eval(`#${id}`, (row) => {
       let seatsColumn = row.querySelector('td[class*="Seats"] div');
       return seatsColumn.innerHTML.trim();
     });
 
+    let crn = await page.$eval(`#${id}`, (row) => {
+      let crnColumn = row.querySelector('td[class*="CRN"] div a');
+      return crnColumn.innerHTML.trim();
+    });
+
+    writeToLog(`Found matching row with ID: ${id} and CRN: ${crn}`);
+
     if(status != 'CLOSED') {
-      sendMessage(`
-      <p>An AI class seems to have opened up!</p>
-      <a href="${scheduleURL}">Click here!</a>
+      sendMessage(`An AI class seems to have opened up!
+      Course CRN: ${crn}
+      Schedule Page Link: ${scheduleURL}
       `);
     } else {
       writeToLog(`Class is closed...`, logPath);
