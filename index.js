@@ -37,7 +37,11 @@ const sendMessage = function(content) {
   };
 
   mailgun.messages().send(data, (error, body) => {
-    writeToLog(body, logPath, 'ERROR');
+    if(error) { 
+      writeToLog(error, logPath, 'ERROR');
+    } else {
+      writeToLog('Email sent!', logPath);
+    }
   });
 };
 
