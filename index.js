@@ -1,7 +1,9 @@
 const puppeteer = require('puppeteer');
 const process = require('process');
+const fs = require('fs');
 const scheduleURL = 'https://appsrv.pace.edu/ScheduleExplorerLive/index.cfm';
 const args = process.argv;
+const logPath = '/var/log/paceScheduleChecker/paceScheduleChecker.log';
 
 if(args.length < 4) {
   console.log('You must pass a valid Mailgun API key and domain!');
@@ -13,6 +15,12 @@ const mailgun = require('mailgun-js')({
   domain: args[3]
 });
 
+const getTimeStamp = function() {
+  let d = new Date();
+
+  return `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+};
+
 const sendMessage = function(content) {
   // console.log(content);
   let data = {
@@ -23,9 +31,15 @@ const sendMessage = function(content) {
   };
 
   mailgun.messages().send(data, (error, body) => {
-    console.log(body);
+    writeToLog(body, logPath, 'ERROR');
   });
 };
+
+const writeToLog = function(message, logPath, type = 'INFO') {
+  let timestamp = getTimeStamp();
+  console.log(`${timestamp} - ${type}: ${message}`);
+  fs.appendFileSync(logPath, `${timestamp} - ${type}: ${message}`);
+}
 
 (async () => {
   const browser = await puppeteer.launch({
