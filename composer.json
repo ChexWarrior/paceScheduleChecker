@@ -1,0 +1,12 @@
+{
+    "name": "andy/pace-schedule-checker",
+    "authors": [
+        {
+            "name": "Andrew Lehman",
+            "email": "aplehm@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.0"
+    }
+}
