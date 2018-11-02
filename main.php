@@ -21,6 +21,5 @@ $response = $client->request('POST', SCHEDULE_URL, [
   ],
 ]);
 
-$body = $response->getBody();
-
-echo $body;
+$html = (string) $response->getBody();
+$crawler = new Crawler($html);
