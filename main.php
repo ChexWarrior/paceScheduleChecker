@@ -2,24 +2,24 @@
 
 require 'vendor/autoload.php';
 
-use Symfony\Component\DomCrawler\Crawler;
-use GuzzleHttp\Client;
+use chexwarrior\Checker;
 
-const SCHEDULE_URL = 'https://appsrv.pace.edu/ScheduleExplorerLive/index.cfm';
+// Get configuration from file (JSON)
 
-$semester = $argv[1];
-$level = $argv[2];
-$major = $argv[3];
-$course = $argv[4];
+// Create course checker
+$courseChecker = new Checker();
 
-$client = new Client();
-$response = $client->request('POST', SCHEDULE_URL, [
-  'form_params' => [
-    'level' => $level,
-    'term' => $semester,
-    'subject' => $major,
-  ],
-]);
+// For each request in checker scrape and parse info
+array_walk($courseChecker->getScheduleRequests(), function ($request) {
+    $html = $courseChecker->getCourseInfo($request);
+    $result = $courseChecker->parseCouseInfo($html);
 
-$html = (string) $response->getBody();
-$crawler = new Crawler($html);
+    if ($result) {
+        // Update message
+    }
+});
+
+// Send notification
+
+// Sleep
+
