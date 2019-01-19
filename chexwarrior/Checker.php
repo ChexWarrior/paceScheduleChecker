@@ -31,12 +31,14 @@ class Checker
      */
     private $scheduleRequests;
 
-    private $message = '';
-
     /**
      * @property GuzzleHttp\Client $client Object that will make http requests to schedule page
      */
     private $client;
+
+    public function getScheduleRequests() {
+        return $this->scheduleRequests;
+    }
 
     public function __construct(array $requests) {
         $this->scheduleRequests = $requests;
@@ -45,7 +47,7 @@ class Checker
         ]);
     }
 
-    private function getCourseInfo(array $params) {
+    public function getCourseInfo(array $params) {
         try {
             $response = $this->client->post([
                 'form_params' => $params,
@@ -54,23 +56,10 @@ class Checker
             return null;
         }
 
-        return $response;
+        return $response->getBody()->getContents();
     }
 
-    private function parseCourseInfo(string $html) {
+    public function parseCourseInfo(string $html) {
 
-    }
-
-    private function updateMessage(bool $result) {
-
-    }
-
-    public function checkCourses(array $requests) {
-        array_walk($requests, function($request) {
-            $response = $this->getCourseInfo($request);
-            $html = $response->getBody()->getContents();
-            $result = $this->parseCourseInfo($html);
-            $this->message = $this->updateMessage($result);
-        });
     }
 }
