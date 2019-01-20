@@ -15,13 +15,15 @@ class CheckerTest extends TestCase
                 <table id="#yuidatatable1">
                     <thead></thead>
                     <tbody class="yui-dt-data">
-                        <tr><td><div>Caesar</div></td></tr>
-                        <tr><td><div>Andy</div></td></tr>
+                        <tr><td>12211</td><td><div>Caesar</div></td><td>NONE</td></tr>
+                        <tr><td>23222</td><td><div>Andy</div></td><td>10</td></tr>
                     </tbody>
                 </table>
             </body>
         </html>
 HTML;
-        $checker->parseCourseInfo($html, 'Caesar');
+        $results = $checker->parseCourseInfo($html, 'Caesar');
+        $this->assertArrayHasKey(12211, $results);
+        $this->assertContains('NONE', $results);
     }
 }
