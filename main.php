@@ -12,9 +12,9 @@ $courseChecker = new Checker();
 // For each request in checker scrape and parse info
 array_walk($courseChecker->getScheduleRequests(), function ($request) {
     $html = $courseChecker->getCourseInfo($request);
-    $result = $courseChecker->parseCouseInfo($html);
+    $results = $courseChecker->parseCouseInfo($html);
 
-    if ($result) {
+    if (!empty($results)) {
         // Update message
     }
 });
