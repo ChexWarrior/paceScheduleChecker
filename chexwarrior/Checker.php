@@ -65,12 +65,11 @@ class Checker
 
         $crawler = new Crawler($html);
         $crawler = $crawler->filterXPath($trSelector);
-
-        foreach ($crawler as $tableRow) {
-            $crn = $tableRow->firstChild->textContent;
-            $seatsAvailable = $tableRow->lastChild->textContent;
+        $crawler->each(function(Crawler $tableRow, int $i) use (&$results) {
+            $crn = $tableRow->filterXPath('//td[contains(@class, "-CRN")]')->text();
+            $seatsAvailable = $tableRow->filterXPath('//td[contains(@class, "-Seats")]')->text();
             $results[$crn] = $seatsAvailable;
-        }
+        });
 
         return $results;
     }
