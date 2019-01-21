@@ -5,25 +5,23 @@ use chexwarrior\Checker;
 
 class CheckerTest extends TestCase
 {
-    public function testParsingCourseInfo() {
-        $checker = new Checker([]);
+    public function parseCourseInfoDataProvider() {
+        $schedule1Html = file_get_contents('tests/html/schedule-1.html');
 
-        $html = <<<HTML
-        <!DOCTYPE html>
-        <html>
-            <body>
-                <table id="#yuidatatable1">
-                    <thead></thead>
-                    <tbody class="yui-dt-data">
-                        <tr><td>12211</td><td><div>Caesar</div></td><td>NONE</td></tr>
-                        <tr><td>23222</td><td><div>Andy</div></td><td>10</td></tr>
-                    </tbody>
-                </table>
-            </body>
-        </html>
-HTML;
-        $results = $checker->parseCourseInfo($html, 'Caesar');
-        $this->assertArrayHasKey(12211, $results);
-        $this->assertContains('NONE', $results);
+        return [
+            [$schedule1Html, 'Caesar', ['key' => 12211, 'value' => 'NONE']],
+            [$schedule1Html, 'Andy', ['key' => 23222, 'value' => 10]],
+        ];
+    }
+
+    /**
+     * @dataProvider parseCourseInfoDataProvider
+     */
+    public function testParseCourseInfo(string $html, string $courseName, array $expectedResults) {
+        $checker = new Checker([]);
+        $results = $checker->parseCourseInfo($html, $courseName);
+        // var_dump($results);
+        $this->assertArrayHasKey($expectedResults['key'], $results);
+        $this->assertContains($expectedResults['value'], $results);
     }
 }
