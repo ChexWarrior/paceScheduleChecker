@@ -20,7 +20,6 @@ class CheckerTest extends TestCase
     public function testParseCourseInfo(string $html, string $courseName, array $expectedResults) {
         $checker = new Checker([]);
         $results = $checker->parseCourseInfo($html, $courseName);
-        // var_dump($results);
         $this->assertArrayHasKey($expectedResults['key'], $results);
         $this->assertContains($expectedResults['value'], $results);
     }
