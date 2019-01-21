@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/root.json",
+    "type": "object",
+    "title": "Classes Schema",
+    "description": "Describes a number of classes to scrape from Pace University's Schedule Explorer",
+    "required": [
+        "config",
+        "classes"
+    ],
+    "properties": {
+        "config": {
+            "$id": "#/properties/config",
+            "type": "object",
+            "title": "Daemon Configuration",
+            "description": "Describes various settings for running of actual daemon.",
+            "required": [
+                "sleep"
+            ],
+            "properties": {
+                "sleep": {
+                    "$id": "#/properties/config/properties/sleep",
+                    "type": "integer",
+                    "title": "Sleep",
+                    "description": "Number of seconds to wait inbetween runs of this daemon.",
+                    "default": 3600
+                }
+            }
+        },
+        "classes": {
+            "$id": "#/properties/classes",
+            "type": "array",
+            "title": "List of Class Definitions",
+            "description": "List of classes described by semseter, student level and subject.",
+            "items": {
+                "$id": "#/properties/classes/items",
+                "type": "object",
+                "title": "Class Definition",
+                "description": "A single description of some classes to scrape. Each class in this item has same semester, level and subject.",
+                "required": [
+                    "semester",
+                    "level",
+                    "subject",
+                    "classes"
+                ],
+                "properties": {
+                    "semester": {
+                        "$id": "#/properties/classes/items/properties/semester",
+                        "type": "string",
+                        "title": "Class Semester",
+                        "description": "Denotes the semester classes are in, actual values must be grabbed from Schedule Explorer by checking #checkterm select values.",
+                        "examples": [
+                            "201930",
+                            "201870"
+                        ]
+                    },
+                    "level": {
+                        "$id": "#/properties/classes/items/properties/level",
+                        "type": "string",
+                        "title": "Class Level",
+                        "description": "The student level of classes. The actual values must be grabbed from #level select values on Schedule Explorer.",
+                        "examples": [
+                            "Undergraduate",
+                            "Graduate"
+                        ]
+                    },
+                    "subject": {
+                        "$id": "#/properties/classes/items/properties/subject",
+                        "type": "string",
+                        "title": "Class Subject",
+                        "description": "Major or area of study of classes to scrape. Actual values must be grabbed from #subject select values on Schedule Explorer.",
+                        "examples": [
+                            "ART",
+                            "CS"
+                        ]
+                    },
+                    "classes": {
+                        "$id": "#/properties/classes/items/properties/classes",
+                        "type": "array",
+                        "title": "Classes",
+                        "description": "Array of class names to scrape from page. Actual values can be grabbed from Schedule Explorer."
+                    }
+                }
+            }
+        }
+    }
+}
