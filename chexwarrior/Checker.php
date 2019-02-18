@@ -84,7 +84,7 @@ class Checker
     }
 
     public function parseCourseRow(Crawler $row): array {
-
+        
     }
 
     public function parseCourseInfo(string $html, string $selector): array {
