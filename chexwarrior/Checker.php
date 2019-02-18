@@ -34,7 +34,7 @@ class Checker
      */
     private $client;
 
-    public function __construct(array $requests) {
+    public function __construct(array $requests = []) {
         $this->scheduleRequests = $requests;
         $this->client = new Client([
             'base_uri' => self::SCHEDULE_URL,
@@ -65,7 +65,7 @@ class Checker
      * @param string $num Course number
      * @return string Returns an XPath selector on success and an empty string on failure
      */
-    public function createCourseSelector(?string $title, ?string $crn, ?string $num): string {
+    public function createCourseSelector(?string $crn, ?string $num, ?string $title): string {
         $selector = '//tbody[@class="yui-dt-data"]/tr/td/div[contains(text(), "%s")]/../..';
 
         if (!empty($crn)) {
@@ -84,7 +84,7 @@ class Checker
     }
 
     public function parseCourseRow(Crawler $row): array {
-        
+
     }
 
     public function parseCourseInfo(string $html, string $selector): array {

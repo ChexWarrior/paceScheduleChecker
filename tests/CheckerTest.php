@@ -5,11 +5,23 @@ use chexwarrior\Checker;
 
 class CheckerTest extends TestCase
 {
-    public function testSelectorIsEmptyWithNoInfoPassed() {
-        $checker = new Checker([]);
-        $sel = $checker->createCourseSelector(null, null, null);
+    public function courseSelectorDataProvider() {
+        return [
+            [null, null, null, ''],
+            ['33411', '404', 'Underwater Basketweaving', '33411'],
+            [null, '404', 'Underwater Basketweaving', '404'],
+            [null, null, 'Underwater Basketweaving', 'Underwater Basketweaving'],
+        ];
+    }
 
-        $this->assertEmpty($sel);
+    /**
+     * @dataProvider courseSelectorDataProvider
+     */
+    public function testCourseSelectorHasExpectedOutput(?string $crn, ?string $num, ?string $title, string $result) {
+        $checker = new Checker();
+        $sel = $checker->createCourseSelector($crn, $num, $title);
+
+        $this->assertStringContainsString($result, $sel);
     }
 
     // public function parseCourseInfoDataProvider() {
