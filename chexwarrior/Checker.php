@@ -108,8 +108,7 @@ class Checker
         $results = [];
         array_walk($this->rowAttributes, function ($colId, $colName) use ($row, &$results) {
             // filterXPath('//td[contains(@class, "-CRN")]')->text();
-            $results[$colName] =
-                $row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text();
+            $results[$colName] = trim($row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text());
         });
 
         return $results;
