@@ -22,8 +22,7 @@ class CheckerTest extends TestCase
 
         return [
             [
-                $row1,
-                [
+                $row1, [
                     'CRN' => '20387',
                     'Subject' => 'FOR',
                     'CourseNumber' => '620',
@@ -34,8 +33,8 @@ class CheckerTest extends TestCase
                     'SectionComments' => '',
                     'Days' => 'T',
                     'Time' => '06:10pm-08:10pm',
-                    'Capacity' => '4',
-                    'SeatsAvailable' => '',
+                    'Capacity' => '20',
+                    'SeatsAvailable' => '4',
                     'Instructor' => 'Zhaohua Dai',
                     'MoreInfo' => 'Linked Prerequisites',
                 ]

@@ -107,8 +107,16 @@ class Checker
     public function parseCourseRow(Crawler $row): array {
         $results = [];
         array_walk($this->rowAttributes, function ($colId, $colName) use ($row, &$results) {
-            // filterXPath('//td[contains(@class, "-CRN")]')->text();
-            $results[$colName] = trim($row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text());
+            $text = trim($row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text(), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
+            $text = preg_replace('/\s+/', ' ', $text);
+
+            if ($colId == 'Time') {
+                $matches = [];
+                preg_match('/([0-9]+:[0-9]+(am|pm)-[0-9]+:[0-9]+(am|pm))/', $text, $matches);
+                $text = $matches[1];
+            }
+
+            $results[$colName] = $text;
         });
 
         return $results;
