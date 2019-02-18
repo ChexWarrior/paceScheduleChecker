@@ -24,20 +24,20 @@ class CheckerTest extends TestCase
             [
                 $row1,
                 [
-                    'CRN' => '',
-                    'Subject' => '',
-                    'CourseNumber' => '',
-                    'Title' => '',
-                    'ScheduleType' => '',
-                    'Credits' => '',
-                    'Campus' => '',
+                    'CRN' => '20387',
+                    'Subject' => 'FOR',
+                    'CourseNumber' => '620',
+                    'Title' => 'Analytical Spectroscopy',
+                    'ScheduleType' => 'LEC',
+                    'Credits' => '4',
+                    'Campus' => 'NYC',
                     'SectionComments' => '',
-                    'Days' => '',
-                    'Time' => '',
-                    'Capacity' => '',
+                    'Days' => 'T',
+                    'Time' => '06:10pm-08:10pm',
+                    'Capacity' => '4',
                     'SeatsAvailable' => '',
-                    'Instructor' => '',
-                    'MoreInfo' => '',
+                    'Instructor' => 'Zhaohua Dai',
+                    'MoreInfo' => 'Linked Prerequisites',
                 ]
             ],
         ];
@@ -58,9 +58,11 @@ class CheckerTest extends TestCase
      */
     public function testParseCourseRow(string $html, array $expectedResults) {
         $checker = new Checker();
-        $row = new Crawler($html);
-        $results = $checker->parseCourseRow($row);
+        $results = $checker->parseCourseRow(new Crawler($html));
 
-        $this->assertEmpty(array_diff($expectedResults, $results));
+        array_walk($expectedResults, function($value, $key) use ($results) {
+            $this->assertArrayHasKey($key, $results);
+            $this->assertEquals($value, $results[$key]);
+        });
     }
 }
