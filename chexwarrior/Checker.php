@@ -57,18 +57,43 @@ class Checker
         return $response->getBody()->getContents();
     }
 
-    public function parseCourseInfo(string $html, string $courseName) {
-        $results = [];
-        $trSelector = sprintf(
-            '//tbody[@class="yui-dt-data"]/tr/td/div[contains(text(), "%s")]/../..', $courseName
-        );
+    /**
+     * Creates an XPath selector based on info passed, will use crn first, then course
+     * number and finally title
+     * @param string $title Course title
+     * @param string $crn Course crn (is unique for each class)
+     * @param string $num Course number
+     * @return string Returns an XPath selector on success and an empty string on failure
+     */
+    public function createCourseSelector(?string $title, ?string $crn, ?string $num): string {
+        $selector = '//tbody[@class="yui-dt-data"]/tr/td/div[contains(text(), "%s")]/../..';
 
+        if (!empty($crn)) {
+            return sprintf($selector, $crn);
+        }
+
+        if (!empty($num)) {
+            return sprintf($selector, $num);
+        }
+
+        if (!empty($title)) {
+            return sprintf($selector, $title);
+        }
+
+        return '';
+    }
+
+    public function parseCourseRow(Crawler $row): array {
+
+    }
+
+    public function parseCourseInfo(string $html, string $selector): array {
+        $results = [];
         $crawler = new Crawler($html);
-        $crawler = $crawler->filterXPath($trSelector);
+        $crawler = $crawler->filterXPath($selector);
         $crawler->each(function(Crawler $tableRow, int $i) use (&$results) {
-            $crn = $tableRow->filterXPath('//td[contains(@class, "-CRN")]')->text();
-            $seatsAvailable = $tableRow->filterXPath('//td[contains(@class, "-Seats")]')->text();
-            $results[$crn] = $seatsAvailable;
+            list('crn' => $crn, 'data' => $data ) = $this->parseCourseRow($tableRow);
+            $results[$crn] = $data;
         });
 
         return $results;
