@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use chexwarrior\Checker;
 
 class CheckerTest extends TestCase
@@ -16,11 +17,29 @@ class CheckerTest extends TestCase
         ];
     }
 
-    public function parseCourseInfoDataProvider() {
+    public function parseCourseRowDataProvider() {
         $row1 = file_get_contents(sprintf("%s/row1.html", self::HTML_TEST_PATH));
 
         return [
-            [$row1, '', []],
+            [
+                $row1,
+                [
+                    'CRN' => '',
+                    'Subject' => '',
+                    'CourseNumber' => '',
+                    'Title' => '',
+                    'ScheduleType' => '',
+                    'Credits' => '',
+                    'Campus' => '',
+                    'SectionComments' => '',
+                    'Days' => '',
+                    'Time' => '',
+                    'Capacity' => '',
+                    'SeatsAvailable' => '',
+                    'Instructor' => '',
+                    'MoreInfo' => '',
+                ]
+            ],
         ];
     }
 
@@ -35,11 +54,12 @@ class CheckerTest extends TestCase
     }
 
     /**
-     * @dataProvider parseCourseInfoDataProvider
+     * @dataProvider parseCourseRowDataProvider
      */
-    public function testParseCourseInfo(string $html, string $selector, array $expectedResults) {
+    public function testParseCourseRow(string $html, array $expectedResults) {
         $checker = new Checker();
-        $results = $checker->parseCourseInfo($html, $selector);
+        $row = new Crawler($html);
+        $results = $checker->parseCourseRow($row);
 
         $this->assertEmpty(array_diff($expectedResults, $results));
     }

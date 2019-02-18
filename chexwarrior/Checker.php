@@ -25,7 +25,8 @@ class Checker
     private const SCHEDULE_URL = 'https://appsrv.pace.edu/ScheduleExplorerLive';
 
     /**
-     * @property array $scheduleRequests An array of requests to be made to schedule explorer page, each one is a unique combination of Term, Level, Subject and Courses
+     * @property array $scheduleRequests An array of requests to be made to schedule explorer page,
+     * each one is a unique combination of Term, Level, Subject and Courses
      */
     private $scheduleRequests;
 
@@ -33,6 +34,26 @@ class Checker
      * @property GuzzleHttp\Client $client Object that will make http requests to schedule page
      */
     private $client;
+
+    /**
+     * @property array $rowAttributes An array of the columns each course row is made of
+     */
+    private $rowAttributes = [
+        'CRN' => 'CRN',
+        'Subject' => 'Subject',
+        'CourseNumber' => 'CourseNumber',
+        'Title' => 'Title',
+        'ScheduleType' => 'ST',
+        'Credits' => 'Credits',
+        'Campus' => 'Campus',
+        'SectionComments' => 'newcol',
+        'Days' => 'Days',
+        'Time' => 'Time',
+        'Capacity' => 'cap',
+        'SeatsAvailable' => 'Seats',
+        'Instructor' => 'Instructor',
+        'MoreInfo' => 'info',
+    ];
 
     public function __construct(array $requests = []) {
         $this->scheduleRequests = $requests;
@@ -83,8 +104,13 @@ class Checker
         return '';
     }
 
-    private function parseCourseRow(Crawler $row): array {
+    public function parseCourseRow(Crawler $row): array {
         $results = [];
+        array_walk($this->rowAttributes, function ($colId, $colName) use ($row, &$results) {
+            // filterXPath('//td[contains(@class, "-CRN")]')->text();
+            $results[$colName] =
+                $row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text();
+        });
 
         return $results;
     }
@@ -94,8 +120,8 @@ class Checker
         $crawler = new Crawler($html);
         $crawler = $crawler->filterXPath($selector);
         $crawler->each(function(Crawler $tableRow, int $i) use (&$results) {
-            list('crn' => $crn, 'data' => $data ) = $this->parseCourseRow($tableRow);
-            $results[$crn] = $data;
+            $cols = $this->parseCourseRow($tableRow);
+            $results[$cols['CRN']] = $cols;
         });
 
         return $results;
