@@ -107,6 +107,11 @@ class Checker
     public function parseCourseRow(Crawler $row): array {
         $results = [];
         array_walk($this->rowAttributes, function ($colId, $colName) use ($row, &$results) {
+            /**
+             * ATTN: The chr(0xC2) . chr(0xA0) represents what the &nbsp; character is
+             * represented as after being pulled by crawler, we need to add it to trim()
+             * to ensure it is removed!
+             */
             $text = trim($row->filterXPath(sprintf('//td[contains(@class, "yui-dt0-col-%s")]', $colId))->text(), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
             $text = preg_replace('/\s+/', ' ', $text);
 
