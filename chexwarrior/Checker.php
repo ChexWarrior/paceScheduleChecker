@@ -83,8 +83,10 @@ class Checker
         return '';
     }
 
-    public function parseCourseRow(Crawler $row): array {
+    private function parseCourseRow(Crawler $row): array {
+        $results = [];
 
+        return $results;
     }
 
     public function parseCourseInfo(string $html, string $selector): array {

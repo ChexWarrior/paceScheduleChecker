@@ -5,12 +5,22 @@ use chexwarrior\Checker;
 
 class CheckerTest extends TestCase
 {
+    const HTML_TEST_PATH = 'tests/html';
+
     public function courseSelectorDataProvider() {
         return [
             [null, null, null, ''],
             ['33411', '404', 'Underwater Basketweaving', '33411'],
             [null, '404', 'Underwater Basketweaving', '404'],
             [null, null, 'Underwater Basketweaving', 'Underwater Basketweaving'],
+        ];
+    }
+
+    public function parseCourseInfoDataProvider() {
+        $row1 = file_get_contents(sprintf("%s/row1.html", self::HTML_TEST_PATH));
+
+        return [
+            [$row1, '', []],
         ];
     }
 
@@ -24,22 +34,13 @@ class CheckerTest extends TestCase
         $this->assertStringContainsString($result, $sel);
     }
 
-    // public function parseCourseInfoDataProvider() {
-    //     $schedule1Html = file_get_contents('tests/html/schedule-1.html');
+    /**
+     * @dataProvider parseCourseInfoDataProvider
+     */
+    public function testParseCourseInfo(string $html, string $selector, array $expectedResults) {
+        $checker = new Checker();
+        $results = $checker->parseCourseInfo($html, $selector);
 
-    //     return [
-    //         [$schedule1Html, 'Caesar', ['key' => 12211, 'value' => 'NONE']],
-    //         [$schedule1Html, 'Andy', ['key' => 23222, 'value' => 10]],
-    //     ];
-    // }
-
-    // /**
-    //  * @dataProvider parseCourseInfoDataProvider
-    //  */
-    // public function testParseCourseInfo(string $html, string $courseName, array $expectedResults) {
-    //     $checker = new Checker([]);
-    //     $results = $checker->parseCourseInfo($html, $courseName);
-    //     $this->assertArrayHasKey($expectedResults['key'], $results);
-    //     $this->assertContains($expectedResults['value'], $results);
-    // }
+        $this->assertEmpty(array_diff($expectedResults, $results));
+    }
 }
